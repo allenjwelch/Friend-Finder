@@ -10,6 +10,11 @@
 
   <style>
     body { padding: 70px 10px 0 10px;}
+    .img { position:fixed; bottom:0; right:0; height: 400px; width: 280px;}
+    .test { position:fixed; bottom:0; left:0; height: 400px; width: 280px;}
+    .inActive {opacity: 0; }
+    .active {animation-name: anim1; animation-duration: 2s; }
+    @keyframes anim1 { 0% {opacity: 0;} 100% {opacity: 100%;}}
   </style>  
 </head>
 <body>
@@ -47,11 +52,27 @@
     </div>
   </section>
 
+  <img class='test' src='/app/public/git.png'>
 
+  <img class='img inActive' src='egg.gif'>
 
 <!-- Bootstrap Components -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  const pressed = []; 
+  const secretCode = 'bootcamp'; 
+  window.addEventListener('keyup', (e) => {
+    // console.log(e.key); 
+    pressed.push(e.key); 
+    pressed.splice(-secretCode.length -1, pressed.length - secretCode.length); 
+    if (pressed.join('').includes(secretCode)) {
+      let surprise = document.querySelector('.img'); 
+      surprise.classList.remove('inActive'); 
+      surprise.classList.add('active'); 
+    }
+  });
+</script>
 
 </body>
 </html>
