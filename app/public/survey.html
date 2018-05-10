@@ -189,8 +189,7 @@
         </div>
         <div class="modal-body">
           <h2 id='match-name'></h2>
-          <img id="match-img" src="" alt="friend Pic" >
-          ...
+          <img id="match-img" alt="friend Pic" >
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -265,38 +264,53 @@
       // change friendsData to res and newUser to newFriend
       
       // let newUser = friendsData[friendsData.length -1].surveyData; 
-      console.log(newFriend); 
+      // console.log(newFriend); 
       let matchTotals = [];
-      let bestMatch = ''; 
+      let bestMatch; 
+      let bestMatchIndex; 
 
-      for (let i = 0; i < res.length - 1; i++) {
-        let match =[];
+      for (let i = 0; i < res.length; i++) {
+        let matchArr =[];
         let totals = 0;
-
-        for (let x =0; x < 5; x++) { 
-          match.push(Math.abs(newUser[x] - res[i].surveyData[x])); 
+        for (let x =0; x < 10; x++) { 
+          matchArr.push(Math.abs(newFriend.surveyData[x] - res[i].surveyData[x])); 
+          // console.log(newFriend.surveyData[x],  res[i].surveyData[x]); /////
         }
 
-        match.forEach(score => {
+        matchArr.forEach(score => {
           totals += score; 
         })
+
+        // console.log(i +' '+ matchArr +' '+ totals); 
 
         let tempArr = []; 
         tempArr.push(i, totals); 
         matchTotals.push(tempArr); 
+        // console.log(matchTotals); 
 
         bestMatch = matchTotals.sort(function(a, b){
           return b[1] > a[1] ? -1 : 1; 
         });
         
-        console.log(bestMatch[0][0]); 
-        let bestMatchIndex = parseFloat(bestMatch[0][0]);
-        console.log(res[bestMatchIndex].name); 
+        bestMatchIndex = parseFloat(bestMatch[0][0]);
       }
 
+      let newFriendMatch = {
+        name: res[bestMatchIndex].name,
+        email: res[bestMatchIndex].email,
+        photo: res[bestMatchIndex].photo
+      }; 
+
+      console.log(newFriendMatch); 
+
+      // console.warn(bestMatch); 
+      // console.warn(bestMatch[0][0]); ///////////////////////////
+      // console.warn(res[bestMatchIndex1].name); 
+
+      $('#match-name').text(newFriendMatch.name); 
+      $('#match-img').attr('src', newFriendMatch.photo); 
 
     }); // end GET
-
   }; 
 
 
