@@ -58,6 +58,12 @@
       * Indicates a required field
     </small>
     <br>
+
+
+    <div class="alert alert-danger invisible" role="alert">
+      <strong>Holy guacamole!</strong> A simple danger alert—check it out!
+    </div>
+
     <h3>Tell us something a little more personal...</h3>
     <div class="form-group ml-0 col-6">
       <label for="q1">Question 1</label>
@@ -174,8 +180,9 @@
   </form>
   
   <div class="container text-center">
-    <button type="button" class="btn btn-primary btn-lg px-5" id='submit' data-toggle="modal" data-target="#matchModal">Submit!</button>
+    <button type="button" class="btn btn-primary btn-lg px-5" id='submit'>Submit!</button>
   </div>
+  <!-- data-toggle="modal" data-target="#matchModal" -->
 
   <!-- Modal -->
   <div class="modal fade" id="matchModal" tabindex="-1" role="dialog" aria-labelledby="matchModalTitle" aria-hidden="true">
@@ -199,7 +206,21 @@
   </div>
 
 
-
+  <div class="modal fade bg-dark" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="matchModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h5 class="modal-title text-center" id="matchModalTitle">Whoa!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Please make sure you have filled in all the required fields before beginning the search for your new friend. </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
@@ -209,48 +230,53 @@
 
 <script type="text/javascript">
   $("#submit").on("click", function(event) {
-    event.preventDefault();
-    let surveyRes = [];
-    surveyRes.push(
-      parseFloat($("#q1").val()), 
-      parseFloat($("#q2").val()), 
-      parseFloat($("#q3").val()), 
-      parseFloat($("#q4").val()), 
-      parseFloat($("#q5").val()), 
-      parseFloat($("#q6").val()), 
-      parseFloat($("#q7").val()), 
-      parseFloat($("#q8").val()), 
-      parseFloat($("#q9").val()), 
-      parseFloat($("#q10").val())
-    ); 
+    if ($("#name").val() === '' || $("#email").val() === '' || $("#photo").val() === '') {
+      $('#warningModal').modal('show')
+    } else {
+      event.preventDefault();
+      let surveyRes = [];
+      surveyRes.push(
+        parseFloat($("#q1").val()), 
+        parseFloat($("#q2").val()), 
+        parseFloat($("#q3").val()), 
+        parseFloat($("#q4").val()), 
+        parseFloat($("#q5").val()), 
+        parseFloat($("#q6").val()), 
+        parseFloat($("#q7").val()), 
+        parseFloat($("#q8").val()), 
+        parseFloat($("#q9").val()), 
+        parseFloat($("#q10").val())
+      ); 
+      // console.log(surveyRes); 
+      
+      let newFriend = {
+        name: $("#name").val().trim(),
+        email: $("#email").val().trim(),
+        photo: $("#photo").val().trim(),
+        surveyData: surveyRes
+      };
 
-    let newFriend = {
-      name: $("#name").val().trim(),
-      email: $("#email").val().trim(),
-      photo: $("#photo").val().trim(),
-      surveyData: surveyRes
-    };
+      console.log(newFriend); 
 
-    console.log(newFriend); 
+      // newFriend.name.replace(/\s+/g, "").toLowerCase()
+      let currentURL = window.location.origin; 
 
-    // newFriend.name.replace(/\s+/g, "").toLowerCase()
-    let currentURL = window.location.origin; 
+      // $.post(currentURL + '/api/friends', newFriend, function(data) {
+      //   $("#name").val(''); 
+      //   $("#email").val('');
+      //   $("#phonenumber").val('');
+      // })
 
-    // $.post(currentURL + '/api/friends', newFriend, function(data) {
-    //   $("#name").val(''); 
-    //   $("#email").val('');
-    //   $("#phonenumber").val('');
-    // })
+      friendFinder(newFriend); 
 
-    friendFinder(newFriend); 
+      $.post("/api/friends", newFriend, function(data) {
+        $("#name").val(''); 
+        $("#email").val('');
+        $("#phonenumber").val('');
+      })
 
-    $.post("/api/friends", newFriend, function(data) {
-      $("#name").val(''); 
-      $("#email").val('');
-      $("#phonenumber").val('');
-    })
-
-
+      $('#matchModal').modal('show');
+    }
 
   });
 
@@ -269,7 +295,7 @@
       let bestMatch; 
       let bestMatchIndex; 
 
-      for (let i = 0; i < res.length; i++) {
+      for (let i = 0; i < res.length-1; i++) {
         let matchArr =[];
         let totals = 0;
         for (let x =0; x < 10; x++) { 
@@ -281,12 +307,12 @@
           totals += score; 
         })
 
-        // console.log(i +' '+ matchArr +' '+ totals); 
+        console.log(i +' '+ matchArr +' '+ totals); 
 
         let tempArr = []; 
         tempArr.push(i, totals); 
         matchTotals.push(tempArr); 
-        // console.log(matchTotals); 
+        console.log(matchTotals); 
 
         bestMatch = matchTotals.sort(function(a, b){
           return b[1] > a[1] ? -1 : 1; 
@@ -303,9 +329,9 @@
 
       console.log(newFriendMatch); 
 
-      // console.warn(bestMatch); 
-      // console.warn(bestMatch[0][0]); ///////////////////////////
-      // console.warn(res[bestMatchIndex1].name); 
+      console.warn(bestMatch); 
+      console.warn(bestMatch[0][0]); ///////////////////////////
+      console.warn(res[bestMatchIndex].name); 
 
       $('#match-name').text(newFriendMatch.name); 
       $('#match-img').attr('src', newFriendMatch.photo); 
