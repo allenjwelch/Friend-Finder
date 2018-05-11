@@ -261,9 +261,7 @@
       };
 
       // console.log(newFriend); 
-
-      // newFriend.name.replace(/\s+/g, "").toLowerCase()
-      let currentURL = window.location.origin; 
+      // let currentURL = window.location.origin; 
 
       friendFinder(newFriend); 
 
@@ -271,27 +269,19 @@
       $.post("/api/friends", newFriend, function(data) {
         $("#name").val(''); 
         $("#email").val('');
-        $("#phonenumber").val('');
+        $("#photo").val('');
       })
 
-      // $.post("/submit/" + encodeURIComponent(newFriend.email), newFriend, function(data) {}); 
-
       $('#matchModal').modal('show');
-    }
-
+    };
   });
 
   // Friend Finder Logic =========================================
   function friendFinder(newFriend) {
     // need to add GET to pull from friendsData
-    $.get("/api/friends", function(res) {
+    let matchContact= []; 
 
-    
-      // may need to go inside of submit function
-      // change friendsData to res and newUser to newFriend
-      
-      // let newUser = friendsData[friendsData.length -1].surveyData; 
-      // console.log(newFriend); 
+    $.get("/api/friends", function(res) {
       let matchTotals = [];
       let bestMatch; 
       let bestMatchIndex; 
@@ -301,19 +291,15 @@
         let totals = 0;
         for (let x =0; x < 10; x++) { 
           matchArr.push(Math.abs(newFriend.surveyData[x] - res[i].surveyData[x])); 
-          // console.log(newFriend.surveyData[x],  res[i].surveyData[x]); /////
         }
 
         matchArr.forEach(score => {
           totals += score; 
         })
 
-        // console.log(i +' '+ matchArr +' '+ totals); 
-
         let tempArr = []; 
         tempArr.push(i, totals); 
         matchTotals.push(tempArr); 
-        // console.log(matchTotals); 
 
         bestMatch = matchTotals.sort(function(a, b){
           return b[1] > a[1] ? -1 : 1; 
@@ -328,20 +314,20 @@
         photo: res[bestMatchIndex].photo
       }; 
 
-      // Post to mailgun.js to send matched friend email of the new user
-      $.post("/submit/" + encodeURIComponent(newFriendMatch.email), newFriend, function(data) {
-        console.log(data); 
-      }); 
-
       // console.log(newFriendMatch); 
-      // console.warn(bestMatch); 
-      // console.warn(bestMatch[0][0]); 
-      // console.warn(res[bestMatchIndex].name); 
-
+     
       $('#match-name').text(newFriendMatch.name); 
       $('#match-img').attr('src', newFriendMatch.photo); 
-
+      
+      matchContact.push(newFriend); 
+      matchContact.push(newFriendMatch); 
     }); // end GET
+
+    // Post to mailgun.js to send matched friend email of the new user
+    // console.log(matchContact); 
+    // $.post("/send", matchContact, function(data) {
+    // console.log(data); 
+    // }); 
   }; 
 
 

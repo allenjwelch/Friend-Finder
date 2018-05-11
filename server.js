@@ -15,6 +15,10 @@ app.use(bodyParser.json());
 
 app.use(express.static('imgs'));
 
+// app.get('/send', (req, res) => {
+//   console.log(req.body); 
+// }); 
+
 require('./app/routing/apiRoutes.js')(app); 
 require('./app/routing/htmlRoutes.js')(app); 
 

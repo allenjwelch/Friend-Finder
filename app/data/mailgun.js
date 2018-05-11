@@ -2,10 +2,15 @@ var mailgun = require("mailgun-js");
 const express = require("express");
 var api_key = 'YOUR_API_KEY';
 var DOMAIN = 'YOUR_DOMAIN_NAME';
-var from_who = 'your@email.com';
+var sentFrom = 'your@email.com';
+
+app.get('/survey', function(req, res) {
+  res.json(friendsData); 
+}); 
 
 module.exports = function (app) {
   app.get('/submit/:mail', function(req,res) {
+    let sendTo = req.params.mail; 
     console.log(req); 
     console.log(res)
     //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
@@ -13,12 +18,12 @@ module.exports = function (app) {
 
     var data = {
     //Specify email data
-      from: from_who,
+      from: sentFrom,
     //The email to contact
-      to: req.params.mail,
+      to: sendTo,
     //Subject and text data  
-      subject: 'Hello from Mailgun',
-      html: 'Hello, This is not a plain-text email, I wanted to test some spicy Mailgun sauce in NodeJS! <a href="http://0.0.0.0:3030/validate?' + req.params.mail + '">Click here to add your email address to a mailing list</a>'
+      subject: 'Friend-Finder has just found you a friend!',
+      html: `Hello, \nIt looks like you and our new user, ${req.name}, may just hit it off! \nIf you'd like to connect, drop them a note at: ${req.email}`
     }
 
     //Invokes the method to send emails given the above data with the helper library
@@ -39,3 +44,54 @@ module.exports = function (app) {
 
   });
 }; // module.exports
+
+// var mailgun = require("mailgun-js");
+// var api_key = 'YOUR_API_KEY';
+// var DOMAIN = 'YOUR_DOMAIN_NAME';
+// var mailgun = require('mailgun-js')({apiKey: api_key, domain: DOMAIN});
+
+// var data = {
+//   from: 'Excited User <me@samples.mailgun.org>',
+//   to: 'bar@example.com, YOU@YOUR_DOMAIN_NAME',
+//   subject: 'Hello',
+//   text: 'Testing some Mailgun awesomness!'
+// };
+
+// mailgun.messages().send(data, function (error, body) {
+//   console.log(body);
+// });
+
+
+
+
+//////////////////
+
+app.get('/send', function(req, res) {
+  res.render('contact'); 
+});
+
+app.post('/send', function(req, res) {
+
+  
+  var mailgun = require("mailgun-js");
+  var api_key = 'key-41756bca5acd51517e2d8ac172c1237e';
+  var DOMAIN = 'sandbox96f81889fe9c4da9a9367905532ee8f0.mailgun.org';
+  var mailgun = require('mailgun-js')({apiKey: api_key, domain: DOMAIN});
+
+  var data = {
+    from: 'Your new friend! <postmaster@sandbox96f81889fe9c4da9a9367905532ee8f0.mailgun.org>',
+    to: 'bar@example.com, YOU@YOUR_DOMAIN_NAME',
+    subject: 'Friend-Finder has just found you a friend!',
+    html: `Hello, \nIt looks like you and our new user, ${req.body.name}, may just hit it off! \nIf you'd like to connect, drop them a note at: ${req.body.email}`
+  };
+
+  mailgun.messages().send(data, function (error, body) {
+    console.log(body);
+    if (!error) {
+      console.log('Mail Sent!'); 
+    } else {
+      console.log('Mail not sent'); 
+    }
+  });
+
+}); 
