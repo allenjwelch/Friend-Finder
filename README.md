@@ -6,7 +6,7 @@ Each time a user submits their survey responses this app searches through the ex
 ![titleImage](/imgs/title.PNG)
 
 ## Build Status
-![Travis](https://img.shields.io/travis/USER/REPO.svg)
+![Wercker](https://img.shields.io/wercker/ci/wercker/docs.svg)
 * _Coming Soon...users will receive email once a new friend is found that matches their compatibility rating_
 
 ## Prerequisites / Dependencies
@@ -17,6 +17,7 @@ To duplicate will need the following things properly installed on your computer.
 Node dependencies:
 * express
 * body-parcer
+* mailgun-js
 
 ## Installation
 * `git clone <repository-url>` this repository

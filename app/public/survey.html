@@ -260,16 +260,10 @@
         surveyData: surveyRes
       };
 
-      console.log(newFriend); 
+      // console.log(newFriend); 
 
       // newFriend.name.replace(/\s+/g, "").toLowerCase()
       let currentURL = window.location.origin; 
-
-      // $.post(currentURL + '/api/friends', newFriend, function(data) {
-      //   $("#name").val(''); 
-      //   $("#email").val('');
-      //   $("#phonenumber").val('');
-      // })
 
       friendFinder(newFriend); 
 
@@ -279,6 +273,8 @@
         $("#email").val('');
         $("#phonenumber").val('');
       })
+
+      // $.post("/submit/" + encodeURIComponent(newFriend.email), newFriend, function(data) {}); 
 
       $('#matchModal').modal('show');
     }
@@ -312,12 +308,12 @@
           totals += score; 
         })
 
-        console.log(i +' '+ matchArr +' '+ totals); 
+        // console.log(i +' '+ matchArr +' '+ totals); 
 
         let tempArr = []; 
         tempArr.push(i, totals); 
         matchTotals.push(tempArr); 
-        console.log(matchTotals); 
+        // console.log(matchTotals); 
 
         bestMatch = matchTotals.sort(function(a, b){
           return b[1] > a[1] ? -1 : 1; 
@@ -332,11 +328,15 @@
         photo: res[bestMatchIndex].photo
       }; 
 
-      console.log(newFriendMatch); 
+      // Post to mailgun.js to send matched friend email of the new user
+      $.post("/submit/" + encodeURIComponent(newFriendMatch.email), newFriend, function(data) {
+        console.log(data); 
+      }); 
 
-      console.warn(bestMatch); 
-      console.warn(bestMatch[0][0]); ///////////////////////////
-      console.warn(res[bestMatchIndex].name); 
+      // console.log(newFriendMatch); 
+      // console.warn(bestMatch); 
+      // console.warn(bestMatch[0][0]); 
+      // console.warn(res[bestMatchIndex].name); 
 
       $('#match-name').text(newFriendMatch.name); 
       $('#match-img').attr('src', newFriendMatch.photo); 
