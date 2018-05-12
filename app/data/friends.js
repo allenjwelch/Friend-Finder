@@ -1,7 +1,7 @@
 let friendsData = [
   {
     name: "Allen",
-    email: 'allen@gmail.com',
+    email: 'allenjwelch@gmail.com',
     photo: "https://media.giphy.com/media/tDFliI4pFgoE0/source.gif",
     surveyData: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
   },

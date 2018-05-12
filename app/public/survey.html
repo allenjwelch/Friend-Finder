@@ -260,9 +260,6 @@
         surveyData: surveyRes
       };
 
-      // console.log(newFriend); 
-      // let currentURL = window.location.origin; 
-
       friendFinder(newFriend); 
 
       // post through apiRoutes to friends.js
@@ -279,8 +276,6 @@
   // Friend Finder Logic =========================================
   function friendFinder(newFriend) {
     // need to add GET to pull from friendsData
-    let matchContact= []; 
-
     $.get("/api/friends", function(res) {
       let matchTotals = [];
       let bestMatch; 
@@ -319,28 +314,23 @@
       $('#match-name').text(newFriendMatch.name); 
       $('#match-img').attr('src', newFriendMatch.photo); 
       
-      matchContact.push(newFriend); 
-      matchContact.push(newFriendMatch); 
-    }); // end GET
+      let matchContact = {
+        to: newFriendMatch.name, 
+        toEmail: newFriendMatch.email, 
+        newFriend: newFriend.name, 
+        newFriendEmail: newFriend.email
+      }; 
+      // matchContact.push(newFriendMatch); 
 
-    // Post to mailgun.js to send matched friend email of the new user
-    $.post("/send", matchContact, function(data) {
-    console.log(matchContact); 
-    console.log(data); 
-    }); 
-
-    // // Send the POST request.
-    // $.ajax("/todos", {
-    //   type: "POST",
-    //   data: newPlan
-    // }).then(
-    //   function() {
-    //     console.log("created new plan");
-    //     // Reload the page to get the updated list
-    //     location.reload();
-    //   }
-    // );
-
+      $.ajax("/send", {
+      type: "POST",
+      data: matchContact  
+      }).then(
+      function(data) {
+        console.log(matchContact); 
+        console.log(data); 
+      });
+    }); // end GET    
   }; 
 
 
