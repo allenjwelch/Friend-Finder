@@ -324,10 +324,23 @@
     }); // end GET
 
     // Post to mailgun.js to send matched friend email of the new user
-    // console.log(matchContact); 
-    // $.post("/send", matchContact, function(data) {
-    // console.log(data); 
-    // }); 
+    $.post("/send", matchContact, function(data) {
+    console.log(matchContact); 
+    console.log(data); 
+    }); 
+
+    // // Send the POST request.
+    // $.ajax("/todos", {
+    //   type: "POST",
+    //   data: newPlan
+    // }).then(
+    //   function() {
+    //     console.log("created new plan");
+    //     // Reload the page to get the updated list
+    //     location.reload();
+    //   }
+    // );
+
   }; 
 
 
